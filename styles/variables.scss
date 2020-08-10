@@ -1,0 +1,11 @@
+@import 'include-media.scss';
+
+$breakpoints: (small: 320px, medium: 768px, large: 1024px);
+
+$theme-colors:
+(
+    'primary': #000,
+    'secondary': #EBEFEF,
+    'highlight': #0B78FC,
+    'highlight-hover': #3C95FB
+);

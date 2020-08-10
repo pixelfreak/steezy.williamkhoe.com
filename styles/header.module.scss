@@ -1,0 +1,75 @@
+@use 'sass:map';
+@import 'variables.scss';
+
+header.main
+{
+    position: fixed;
+    z-index: 999;
+    display:flex;
+    width:100vw; height:60px;
+    justify-content: space-between;
+    border-bottom:3px solid map.get($theme-colors, 'secondary');
+    background-color: #FFF;
+
+    .logo
+    {
+        svg
+        {
+            padding:0 24px;
+            width:148px; height:100%;
+            fill:rgb(34, 34, 34);
+        }
+    }
+
+    nav
+    {
+        display: flex;
+        align-items: stretch; justify-content:space-evenly;
+        a
+        {
+            display: flex;
+            align-items: center;
+            padding:0 20px 0 24px;
+            font-size:.8em; font-weight:600; letter-spacing:2px;
+            color:map.get($theme-colors, 'primary');
+            text-transform: uppercase;
+
+            &.highlight
+            {
+                background-color:map.get($theme-colors, 'highlight');
+                color:#FFF;
+
+                &:hover
+                {
+                    background-color:map.get($theme-colors, 'highlight-hover');
+                }
+            }
+        }
+        .avatar
+        {
+            display: flex;
+            align-items: center;
+            padding:0 18px;
+            cursor: pointer;
+
+            img
+            {
+                width:32px; height:32px;
+                border-radius:50%;
+            }
+            svg
+            {
+                margin:0 0 0 8px;
+                color:rgb(34, 34, 34);
+            }
+
+            &:hover
+            {
+                img, svg
+                {
+                    opacity:.8;
+                }
+            }
+        }
+    }
+}
