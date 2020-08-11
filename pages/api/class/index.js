@@ -1,51 +1,42 @@
 import Firebase from '../../../lib/firebase';
 
-export default async(req, res) => 
+async function Classes(req, res)
 {
-    switch(req.method)
-    {
-        case 'POST':
-            const [, ...csv] = req.body.split(/\r?\n/);
+    const start = parseInt(req.query.start);
+    const count = parseInt(req.query.count);
 
-            try
-            {
-                const batch = Firebase.batch();
-                for (let item of csv)
-                {
-                    if (item.trim() !== '')
-                    {
-                        let data = {};
-                        [data.title, data.instructor, data.level, data.song, data.videoURL, data.thumbnailSlug] = item.split(',');
+    const classes = await getClasses(start, count);
 
-                        const docRef = Firebase.collection('classes').doc();
-                        batch.set(docRef, data);
-                    }
-                }
-                await batch.commit();
-            }
-            catch(e)
-            {
-                return res.status(500).json({ error: e.message });
-            }
-
-            return res.json({ success: true });
-
-        default:
-            const start = parseInt(req.query.start);
-            const count = parseInt(req.query.count);
-
-            let data;
-            try
-            {
-                data = await Firebase.collection('classes').orderBy('title').startAt(start).limit(count).get();
-                data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            }
-            catch(e)
-            {
-                return res.status(500).json({ error: e.message });
-            }
-
-            return res.json(data);
-    }
-    
+    return res.json(classes);
 }
+
+async function getClasses(start, count)
+{
+    let data = { metadata: await getClassesMetadata() };
+    try
+    {
+        const classes = await Firebase.collection('classes').orderBy('title').limit(count).offset((start - 1) * count).get();
+        data.classes = classes.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
+    catch(e)
+    {
+        
+    }
+
+    return data;
+}
+
+async function getClassesMetadata()
+{
+    let data = await Firebase.collection('metadata').doc('classes').get();
+    
+    if (data.exists)
+    {
+        return data.data();
+    }
+
+    return null;
+}
+
+export { getClasses };
+export default Classes;

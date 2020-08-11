@@ -1,13 +1,55 @@
-import Layout from '../../components/layout';
+import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
+import Layout from '../../components/layout';
 import { Pagination } from '@material-ui/lab';
+import { getClasses } from '../api/class/index';
 import css from '../../styles/classes.module.scss';
 
-export default function Classes()
+export async function getServerSideProps()
 {
-    function handlePageChange(event, value)
+    const classCountPerPage = 9;
+    const data = await getClasses(1, classCountPerPage);
+
+    return {
+        props:
+        {
+            data,
+            classCountPerPage
+        }
+    };
+}
+
+export default function Classes({ data, classCountPerPage })
+{
+    const [currentClasses, setCurrentClasses] = useState(data);
+    const [page, setPage] = useState(1);
+    const classesMemoMap = useRef(new Map().set(page, data));
+
+    useEffect(() =>
     {
-        console.log(event, value);
+        async function fetchClasses()
+        {
+            // TODO: add loading here
+            const response = await fetch(`/api/class?start=${page}&count=${classCountPerPage}`);
+            const data = await response.json();
+            classesMemoMap.current.set(page, data);
+            setCurrentClasses(data);
+        }
+
+        if (classesMemoMap.current.has(page))
+        {
+            setCurrentClasses(classesMemoMap.current.get(page));
+        }
+        else
+        {
+            fetchClasses();
+        }
+    }, [page]);
+
+    async function handlePageChange(event, value)
+    {
+        setPage(value);        
     }
 
     return (
@@ -25,51 +67,23 @@ export default function Classes()
                     </div>
                 </header>
                 <div className={css.classes}>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <h2>A Class Title that takes up two total lines and ...</h2>
-                        <div className={css.metadata}>
-                            <div>Instructor: <strong>Name</strong></div>
-                            <div>Level: <strong>Advanced</strong></div>
-                            <div>Song: <strong>Title of the Song</strong></div>
-                        </div>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
-                    <div className={css.class}>
-                        <img src="https://raw.githubusercontent.com/steezyinc/senior-coding-challenge/master/assets/class-thumbnail-1.jpg" alt=""/>
-                        <div className={css.progress}><div>0%</div></div>
-                    </div>
+                    {currentClasses.classes.map(classItem => 
+                        <Link key={classItem.id} href={`/classes/${classItem.id}`}>
+                            <div className={css.class}>
+                                <img src={`https://res.cloudinary.com/pixelfreak/image/upload/v1597016739/${classItem.thumbnailSlug}`} alt="Thumbnail"/>
+                                <h2>{classItem.title}</h2>
+                                <div className={css.metadata}>
+                                    <div>Instructor: <strong>{classItem.instructor}</strong></div>
+                                    <div>Level: <strong>{classItem.level}</strong></div>
+                                    <div>Song: <strong>{classItem.song}</strong></div>
+                                </div>
+                                <div className={css.progress}><div>0%</div></div>
+                            </div>
+                        </Link>
+                    )}
                 </div>
                 <div className={css.pagination}>
-                    <Pagination count={10} size="large" shape="rounded" onChange={handlePageChange} />
+                    <Pagination count={Math.ceil(currentClasses.metadata.count / classCountPerPage)} size="large" shape="rounded" onChange={handlePageChange} />
                 </div>
             </section>
         </Layout>

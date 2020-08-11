@@ -1,14 +1,22 @@
 import Firebase from '../../../lib/firebase';
 
-export default async(req, res) => 
+async function Class(req, res)
+{
+    const data = await getClass(req.query.id);
+
+    res.json(data);
+}
+
+async function getClass(id)
 {
     let data;
     try
     {
-        data = await Firebase.collection('classes').doc(req.query.id).get();
+        data = await Firebase.collection('classes').doc(id).get();
+        
         if (data.exists)
         {
-            data = { id: req.query.id, ...data.data() };
+            data = { id, ...data.data() };
         }
         else
         {
@@ -17,8 +25,11 @@ export default async(req, res) =>
     }
     catch(e)
     {
-        return res.status(500).json({ error: e.message });
+        
     }
 
-    res.json(data);
+    return data;
 }
+
+export { getClass };
+export default Class;
