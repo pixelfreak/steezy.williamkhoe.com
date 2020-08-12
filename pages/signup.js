@@ -1,26 +1,27 @@
-import Head from 'next/head';
+import { useEffect } from 'react';
+import Router from 'next/router';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 
 function Signup()
 {
-    const { user } = useAuth0();
+    const { user, isAuthenticated } = useAuth0();
+
+    useEffect(() =>
+    {
+        if (isAuthenticated)
+        {
+            Router.push('/classes');
+        }
+    }, [isAuthenticated]);
 
     return (
-        <div>
-            <Head>
-                <title>Classes</title>
-            </Head>
-            <ul>
-                <li>Name: {user.nickname}</li>
-                <li>E-mail: {user.email}</li>
-            </ul>
-        </div>
+        <div></div>
     );
 }
 
 export default withAuthenticationRequired(Signup, 
 { 
-    onRedirecting: () => (<div>Redirecting you to the login page...</div>),
+    onRedirecting: () => (<div className="redirect-notice">Redirecting to the signup page...</div>),
     loginOptions: 
     {
         screen_hint: 'signup'

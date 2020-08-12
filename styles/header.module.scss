@@ -25,7 +25,7 @@ header.main
     {
         display: flex;
         align-items: stretch; justify-content:space-evenly;
-        a
+        a, button span
         {
             display: flex;
             align-items: center;
@@ -45,6 +45,10 @@ header.main
                 }
             }
         }
+        button span
+        {
+            padding:0 10px 0 14px;
+        }
         .avatar
         {
             display: flex;
@@ -61,14 +65,6 @@ header.main
             {
                 margin:0 0 0 8px;
                 color:rgb(34, 34, 34);
-            }
-
-            &:hover
-            {
-                img, svg
-                {
-                    opacity:.8;
-                }
             }
         }
     }

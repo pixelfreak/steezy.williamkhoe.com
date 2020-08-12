@@ -1,57 +1,71 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../../components/layout';
 import { Pagination } from '@material-ui/lab';
-import { getClasses } from '../api/class/index';
+import algoliasearch from 'algoliasearch/lite';
+import { InstantSearch, Configure, connectSearchBox, connectPagination, connectHits } from 'react-instantsearch-dom';
 import css from '../../styles/classes.module.scss';
 
-export async function getServerSideProps()
+const classCountPerPage = 9;
+const searchClient = algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APP_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API);
+
+const SteezyPagination = connectPagination(({ currentRefinement, nbPages, refine, createURL }) =>
 {
-    const classCountPerPage = 9;
-    const data = await getClasses(1, classCountPerPage);
+    return (
+        <div className={css.pagination}>
+            <Pagination count={nbPages} size="large" shape="rounded" onChange={(e, value) => refine(value)}/>
+        </div>
+    );
+});
 
-    return {
-        props:
-        {
-            data,
-            classCountPerPage
-        }
-    };
-}
+const SteezyClasses = connectHits(({ hits }) => (
+    <div className={css.classes}>
+        {hits.map(hit =>
+        <Link key={hit.objectID} href={`/classes/${hit.objectID}`}>
+            <div className={css.class}>
+                <img src={`https://res.cloudinary.com/pixelfreak/image/upload/v1597016739/${hit.thumbnailSlug}`} alt="Thumbnail"/>
+                <h2>{hit.title}</h2>
+                <div className={css.metadata}>
+                    <div>Instructor: <strong>{hit.instructor}</strong></div>
+                    <div>Level: <strong>{hit.level}</strong></div>
+                    <div>Song: <strong>{hit.song}</strong></div>
+                </div>
+                <div className={css.progress}><div>0%</div></div>
+            </div>
+        </Link>
+        )}
+    </div>
+));
 
-export default function Classes({ data, classCountPerPage })
+const SteezySearchBox = connectSearchBox(({ currentRefinement, refine, delay, placeholder }) =>
 {
-    const [currentClasses, setCurrentClasses] = useState(data);
-    const [page, setPage] = useState(1);
-    const classesMemoMap = useRef(new Map().set(page, data));
+    const [query, setQuery] = useState(currentRefinement);
+    const timeout = useRef(null);
 
-    useEffect(() =>
+    function handleChangeDebounced(e)
     {
-        async function fetchClasses()
-        {
-            // TODO: add loading here
-            const response = await fetch(`/api/class?start=${page}&count=${classCountPerPage}`);
-            const data = await response.json();
-            classesMemoMap.current.set(page, data);
-            setCurrentClasses(data);
-        }
+        const value = e.currentTarget.value;
 
-        if (classesMemoMap.current.has(page))
-        {
-            setCurrentClasses(classesMemoMap.current.get(page));
-        }
-        else
-        {
-            fetchClasses();
-        }
-    }, [page]);
+        clearTimeout(timeout.current);
+        timeout.current = setTimeout(() => refine(value), delay);
 
-    async function handlePageChange(event, value)
-    {
-        setPage(value);        
+        setQuery(value);
     }
 
+    return (
+        <div className={css.search}>
+            <form noValidate="" action="" role="search">
+                <input type="search" value={query} onChange={handleChangeDebounced} placeholder={placeholder} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" required="" maxLength="512"/>
+                <button type="submit" title="Submit your search query."><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 40 40"><path d="M26.804 29.01c-2.832 2.34-6.465 3.746-10.426 3.746C7.333 32.756 0 25.424 0 16.378 0 7.333 7.333 0 16.378 0c9.046 0 16.378 7.333 16.378 16.378 0 3.96-1.406 7.594-3.746 10.426l10.534 10.534c.607.607.61 1.59-.004 2.202-.61.61-1.597.61-2.202.004L26.804 29.01zm-10.426.627c7.323 0 13.26-5.936 13.26-13.26 0-7.32-5.937-13.257-13.26-13.257C9.056 3.12 3.12 9.056 3.12 16.378c0 7.323 5.936 13.26 13.258 13.26z"></path></svg></button>
+                {/* <button type="reset" title="Clear the search query." hidden=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="10" height="10"><path d="M8.114 10L.944 2.83 0 1.885 1.886 0l.943.943L10 8.113l7.17-7.17.944-.943L20 1.886l-.943.943-7.17 7.17 7.17 7.17.943.944L18.114 20l-.943-.943-7.17-7.17-7.17 7.17-.944.943L0 18.114l.943-.943L8.113 10z"></path></svg></button> */}
+            </form>
+        </div>
+    );
+});
+
+export default function Classes()
+{
     return (
         <Layout>
             <Head>
@@ -59,32 +73,15 @@ export default function Classes({ data, classCountPerPage })
             </Head>
 
             <section id={css.classes}>
-                <header>
-                    <h1>Classes</h1>
-                    <div className={css.search}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23.75 22L17.5 15.75C18.75 14.125 19.375 12.25 19.375 10.125C19.375 5 15.125 0.75 10 0.75C4.875 0.75 0.75 5 0.75 10.125C0.75 15.25 5 19.5 10.125 19.5C12.25 19.5 14.25 18.75 15.75 17.625L22 23.875L23.75 22ZM3.25 10.125C3.25 6.375 6.375 3.25 10.125 3.25C13.875 3.25 17 6.375 17 10.125C17 13.875 13.875 17 10.125 17C6.375 17 3.25 13.875 3.25 10.125Z" fill="currentColor"></path></svg>
-                        <input type="text" placeholder="Search for Artist or Song"/>
-                    </div>
-                </header>
-                <div className={css.classes}>
-                    {currentClasses.classes.map(classItem => 
-                        <Link key={classItem.id} href={`/classes/${classItem.id}`}>
-                            <div className={css.class}>
-                                <img src={`https://res.cloudinary.com/pixelfreak/image/upload/v1597016739/${classItem.thumbnailSlug}`} alt="Thumbnail"/>
-                                <h2>{classItem.title}</h2>
-                                <div className={css.metadata}>
-                                    <div>Instructor: <strong>{classItem.instructor}</strong></div>
-                                    <div>Level: <strong>{classItem.level}</strong></div>
-                                    <div>Song: <strong>{classItem.song}</strong></div>
-                                </div>
-                                <div className={css.progress}><div>0%</div></div>
-                            </div>
-                        </Link>
-                    )}
-                </div>
-                <div className={css.pagination}>
-                    <Pagination count={Math.ceil(currentClasses.metadata.count / classCountPerPage)} size="large" shape="rounded" onChange={handlePageChange} />
-                </div>
+                <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME}>
+                    <Configure hitsPerPage={classCountPerPage}/>
+                    <header>
+                        <h1>Classes</h1>
+                        <SteezySearchBox placeholder="Search for Title/Artist/Song" delay={300}/>
+                    </header>
+                    <SteezyClasses />
+                    <SteezyPagination />
+                </InstantSearch>
             </section>
         </Layout>
     );

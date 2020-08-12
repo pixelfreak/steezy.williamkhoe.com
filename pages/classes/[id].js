@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { getClass } from '../api/class/[id]';
 import Layout from '../../components/layout';
 import ReactPlayer from 'react-player/youtube';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import css from '../../styles/class.module.scss';
 
 export async function getServerSideProps({ query })
@@ -16,8 +17,13 @@ export async function getServerSideProps({ query })
     };
 }
 
-export default function Class({ data })
+function Class({ data })
 {
+    function handleProgress({ playedSeconds })
+    {
+        console.log(`playedSeconds: ${playedSeconds}`);
+    }
+
     return (
         <Layout>
             <Head>
@@ -25,17 +31,12 @@ export default function Class({ data })
             </Head>
             <section id={css.class}>
                 <div className={css.player}>
-                    <ReactPlayer url={data.videoURL} width="100%" height="100%" config={
-                        { 
-                            youtube: 
-                            { 
-                                onUnstarted: () => { console.log('test'); }
-                            } 
-                        }
-                    }/>
+                    <ReactPlayer width="100%" height="100%" url={data.videoURL} onProgress={handleProgress} playing={true} controls={true} config={{onUnstarted: () => {}}}/>
                 </div>
                 <h1>{data.title}</h1>
             </section>
         </Layout>
     );
 }
+
+export default withAuthenticationRequired(Class);

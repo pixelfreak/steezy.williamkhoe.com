@@ -3,7 +3,7 @@ import css from '../styles/header.module.scss';
 
 export default function Header() 
 {
-    const { isAuthenticated, user } = useAuth0();
+    const { isAuthenticated, user, logout } = useAuth0();
 
     return (
         <header className={css.main}>
@@ -12,9 +12,10 @@ export default function Header()
             </a>
             <nav>
                 {isAuthenticated ?
-                    <button className={css.avatar}>
+                    <button className={css.avatar} onClick={() => logout({ returnTo: window.location.origin })}>
                         <img src={user.picture} alt="Avatar"/>
-                        <svg width="8px" height="8px" viewBox="0 0 19 12" fill="none" ml="2" color="darkGrey"><path d="M1.77075 1.76752L9.49936 9.46464L17.229 1.76752" stroke="currentColor" strokeWidth="3"></path></svg>
+                        <span>Logout</span>
+                        {/* <svg width="8px" height="8px" viewBox="0 0 19 12" fill="none" ml="2" color="darkGrey"><path d="M1.77075 1.76752L9.49936 9.46464L17.229 1.76752" stroke="currentColor" strokeWidth="3"></path></svg> */}
                     </button>
                     :
                     <>
