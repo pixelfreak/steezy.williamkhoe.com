@@ -2,12 +2,33 @@ import Firebase from '../../../lib/firebase';
 
 async function Classes(req, res)
 {
-    const start = parseInt(req.query.start);
-    const count = parseInt(req.query.count);
+    switch(req.method)
+    {
+        // case 'POST':
+        //     try
+        //     {
+        //         const batch = Firebase.batch();
+        //         for (let { objectID, ...data } of req.body)
+        //         {
+        //             const docRef = Firebase.collection('classes').doc(objectID);
+        //             batch.set(docRef, data);
+        //         }
+        //         await batch.commit();
+        //     }
+        //     catch(e)
+        //     {
+        //         return res.status(500).json({ error: e.message });
+        //     }
 
-    const classes = await getClasses(start, count);
+        //     return res.json({ success: true });
+        default:
+            const start = parseInt(req.query.start);
+            const count = parseInt(req.query.count);
 
-    return res.json(classes);
+            const classes = await getClasses(start, count);
+
+            return res.json(classes);
+    }
 }
 
 async function getClasses(start, count)

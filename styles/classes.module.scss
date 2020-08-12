@@ -18,19 +18,47 @@ section#classes
         width:40%; height:42px;
         border:1px solid map.get($theme-colors, 'secondary'); border-radius:8px;
 
-        input
+        form
         {
-            padding:2px 0 0 40px;
+            height:100%;
+        }
+        input[type='search']
+        {
+            padding:2px 36px 0 40px;
             width:100%; height:100%;
             background-color:transparent;
             border:none;
             outline-color: map.get($theme-colors, 'highlight');
+
+            &::-webkit-search-cancel-button
+            {
+                display: none;
+            }
         }
-        svg
+        button[type='submit']
         {
-            position: absolute;
-            top:8px; left:9px;
-            color:#AAA;
+            svg
+            {
+                position: absolute;
+                top:9px; left:9px;
+                width:22px; height:22px;
+                fill:#AAA;
+            }
+        }
+        button[type='reset']
+        {
+            svg
+            {
+                position: absolute;
+                top:14px; right:12px;
+                width:12px; height:12px;
+                fill:#AAA;
+            }
+        }
+        
+        ::placeholder
+        {
+            color: #AAA;
         }
     }
 
