@@ -1,6 +1,6 @@
 # Welcome to Steezy Coding Challenge!
 
-The app is deployed here: [https://steezy.vercel.app/](https://steezy.vercel.app/)
+The app is deployed here: [https://steezy.vercel.app/](https://steezy.vercel.app/). Any commit to `master` triggers re-deployment.
 
 To run it in development: 
 1. Clone this repo
