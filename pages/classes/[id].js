@@ -13,7 +13,8 @@ export async function getServerSideProps({ req, res, query })
 
     if (!session || !session.user) 
     {
-        res.writeHead(302, { Location: '/api/login' });
+        const redirect = encodeURIComponent(req.url);
+        res.writeHead(302, { Location: `/api/login?redirect=${redirect}` });
         res.end();
         return {
             props:
