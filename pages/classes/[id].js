@@ -15,7 +15,13 @@ export async function getServerSideProps({ req, res, query })
     {
         res.writeHead(302, { Location: '/api/login' });
         res.end();
-        return;
+        return {
+            props:
+            {
+                classData: null,
+                userClassData: null
+            }
+        };
     }
 
     // TODO: Consolidate all user object
