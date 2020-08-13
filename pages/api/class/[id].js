@@ -1,4 +1,4 @@
-import Firebase from '../../../lib/firebase';
+import Firestore from '../../../lib/firebase';
 
 async function Class(req, res)
 {
@@ -12,7 +12,7 @@ async function getClass(id)
     let data;
     try
     {
-        data = await Firebase.collection('classes').doc(id).get();
+        data = await Firestore.collection('classes').doc(id).get();
         
         if (data.exists)
         {
@@ -25,7 +25,7 @@ async function getClass(id)
     }
     catch(e)
     {
-        
+        console.error(e.message);
     }
 
     return data;

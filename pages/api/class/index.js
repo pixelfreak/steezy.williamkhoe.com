@@ -1,4 +1,4 @@
-import Firebase from '../../../lib/firebase';
+import Firestore from '../../../lib/firebase';
 
 async function Classes(req, res)
 {
@@ -15,12 +15,12 @@ async function getClasses(start, count)
     let data = { metadata: await getClassesMetadata() };
     try
     {
-        const classes = await Firebase.collection('classes').limit(count).offset((start - 1) * count).get();
-        data.classes = classes.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const snapshot = await Firestore.collection('classes').limit(count).offset((start - 1) * count).get();
+        data.classes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     }
     catch(e)
     {
-        
+        console.error(e.message);
     }
 
     return data;
@@ -28,7 +28,7 @@ async function getClasses(start, count)
 
 async function getClassesMetadata()
 {
-    let data = await Firebase.collection('metadata').doc('classes').get();
+    let data = await Firestore.collection('metadata').doc('classes').get();
     
     if (data.exists)
     {

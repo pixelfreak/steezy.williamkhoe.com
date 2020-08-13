@@ -25,7 +25,7 @@ header.main
     {
         display: flex;
         align-items: stretch; justify-content:space-evenly;
-        a, button span
+        a
         {
             display: flex;
             align-items: center;
@@ -44,10 +44,11 @@ header.main
                     background-color:map.get($theme-colors, 'highlight-hover');
                 }
             }
-        }
-        button span
-        {
-            padding:0 10px 0 14px;
+
+            span
+            {
+                padding:0 6px 0 16px;
+            }
         }
         .avatar
         {

@@ -5,7 +5,7 @@ export default function Login()
 {
     useEffect(() =>
     {
-        Router.push('/api/signup');
+        Router.push('/api/logout');
     });
 
     return (
