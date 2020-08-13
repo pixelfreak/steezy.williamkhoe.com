@@ -7,7 +7,7 @@ export default async function Login(req, res)
     if (req.query.redirect)
     {
         const redirectURL = req.query.redirect || '/';
-        const state = Buffer.concat([Buffer.from(redirectURL), Buffer.from('|'), Crypto.randomBytes(32)]);
+        const state = Buffer.concat([Buffer.from('redirect='), Buffer.from(redirectURL), Buffer.from('|'), Crypto.randomBytes(32)]);
         loginOptions = { authParams: { state: Buffer.from(state).toString('base64') } };
     }
 

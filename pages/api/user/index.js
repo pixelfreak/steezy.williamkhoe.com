@@ -3,15 +3,15 @@ import auth0 from '../../../lib/auth0';
 
 async function User(req, res)
 {
-    const { user: { sub, ...auth0UserData} } = await auth0.getSession(req);
+    const { user: { sub, name, ...auth0UserData} } = await auth0.getSession(req);
     const userID = sub.split('|')[1];
 
-    let firestoreUserData = await getUser(userID);
+    let firestoreUserData = await getUser(userID, name);
 
     res.json({ ...auth0UserData, ...firestoreUserData});
 }
 
-async function getUser(id)
+async function getUser(id, email)
 {
     let data = null;
     try
@@ -21,6 +21,11 @@ async function getUser(id)
         if (doc.exists)
         {
             data = { id, ...doc.data() };
+        }
+        else
+        {
+            data = { id, email };
+            await Firestore.collection('users').doc(id).set({ email });
         }
     }
     catch(e)

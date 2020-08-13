@@ -2,8 +2,13 @@ import auth0 from '../../lib/auth0';
 
 export default async function Callback(req, res) 
 {
-    const state = Buffer.from(req.query.state || '', 'base64').toString('ascii');
-    const redirectTo = state.slice(0, state.indexOf('|'))
+    let redirectTo = '/';
+    let prefix = req.query.state.indexOf('redirect=');
+    if (prefix >= 0)
+    {
+        const state = Buffer.from(req.query.state || '', 'base64').toString('ascii');
+        redirectTo = state.slice(prefix, state.indexOf('|'))
+    }
     
     try
     {

@@ -5,7 +5,7 @@ import Footer from './footer';
 export default function Layout({ children }) 
 {
     return (
-        <>
+        <div className="theme-light">
             <Head>
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet"/>
             </Head>
@@ -14,7 +14,7 @@ export default function Layout({ children })
                 {children}
             </main>
             <Footer/>
-        </>
+        </div>
     );
 }
   
