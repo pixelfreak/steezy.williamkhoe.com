@@ -9,7 +9,7 @@ import css from '../../styles/class.module.scss';
 
 export async function getServerSideProps({ req, res, query })
 {
-    const session = await auth0.getSession(req)
+    const session = await auth0.getSession(req);
 
     if (!session || !session.user) 
     {

@@ -15,13 +15,18 @@ export async function getServerSideProps({ req, res, query })
 {
     // TODO: Consolidate all user object
     const session = await auth0.getSession(req)
-
+    let userID = 0;
     if (!session || !session.user) 
     {
-        return;
+        return {
+            props:
+            {
+                userID
+            }
+        };
     }
 
-    const userID = session.user.sub.split('|')[1];
+    userID = session.user.sub.split('|')[1];
 
     return {
         props:
@@ -46,9 +51,11 @@ const ClassesHits = connectHits(({ hits }) => (
         <Link key={hit.objectID} href={`/classes/${hit.objectID}`}>
             <div className={css.class}>
                 <img src={`https://res.cloudinary.com/pixelfreak/image/upload/v1597016739/${hit.thumbnailSlug}`} alt="Thumbnail"/>
-                <h2>{hit.title}</h2>
                 <div className={css.metadata}>
-                    <div>Instructor: <strong>{hit.instructor}</strong></div>
+                    <header>
+                        <h2>{hit.title}</h2>
+                        <h3>{hit.instructor}</h3>
+                    </header>
                     <div>Level: <strong>{hit.level}</strong></div>
                     <div>Song: <strong>{hit.song}</strong></div>
                 </div>
