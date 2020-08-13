@@ -63,7 +63,7 @@ Param:
 Unfortunately, there are some features I didn't get to implement due to time restrictions. 
 
 Here is the list:
-- Search does not currently work for middle-of-the-word query. 
+- Search does not currently work for middle-of-the-word query. To support this, possible alternative for every string needs to be created. This should be done sparingly as partial matching creates noise in the results. 
 - Search filter based on Level.
 - Track percentage of class video that user has actually watched.
 - Display progress UI for all videos in `/classes` when user is logged in.
