@@ -1,3 +1,13 @@
+Welcome to Steezy Coding Challenge!
+
+The app is deployed here: [https://steezy.vercel.app/classes](https://steezy.vercel.app/classes)
+
+To run it in development: 
+1. Clone this repo
+2. Copy the `.env.local` file to the root directory
+3. Run `npm run dev`
+4. View the site at `localhost:3000`
+
 # Architecture
 - [Next.js](https://nextjs.org/) is chosen for speed of development and its out-of-the-box features such as code-splitting, static/SSR/Serverless Functions, CSS-in-JS, and dynamic routing capabilites.
 - [Firestore](https://firebase.google.com/docs/firestore) is chosen as the database.
