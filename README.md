@@ -4,9 +4,10 @@ The app is deployed here: [https://steezy.vercel.app/](https://steezy.vercel.app
 
 To run it in development: 
 1. Clone this repo
-2. Copy the `.env.local` file to the root directory (included in the emailed zip)
-3. Run `npm run dev`
-4. View the site at `localhost:3000`
+2. Go to the root directory of this project and do `npm install`
+3. Confirm that `.env.local` file is in the root directory (this file is included in the emailed zip)
+4. Run `npm run dev`
+5. View the site at `localhost:3000`
 
 # Architecture
 - [Next.js](https://nextjs.org/) is chosen for speed of development and its out-of-the-box features such as code-splitting, static/SSR/Serverless Functions, CSS-in-JS, and dynamic routing capabilites.
