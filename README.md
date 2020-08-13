@@ -24,10 +24,11 @@ To run it in development:
   I would suggest doing an infinite scroll with filters instead.
 - Google Cloud Functions need to be written to update Firestore `classes` metadata onWrite (to update number of classes).
 - Google Cloud Functions need to be written to sync Algolia index with Firestore.
-- The user activity `playedSeconds` is currently being written to Firestore every second the video is playing. Firestore charges per write so scaling this could get very expensive. It may be wiser to increase the interval or only write when the page unloads.
+- The user activity `playedSeconds` is currently being written to Firestore every second the video is playing. Firestore charges per write so scaling this could get very expensive. It may be more cost-effective to increase the interval or only write when the page unloads.
 
 # API
 GET `/api/class`
+
 Retrieve list of classes.
 
 Param:
@@ -35,17 +36,21 @@ Param:
 - `count` The number of results to return
 
 GET `/api/class/[id]`
+
 Retrieve a class.
 
 GET `/api/user`
+
 Retrieve the current user object. Create a user if it doesn't exist. 
 *This API is auth-protected.*
 
 GET `/api/user/[classes]`
+
 Retrieve classes watched by current user. `[classes]` is a comma-delimited class ids. Max 10 classes for now (due to Firestore limitation). Any ids past the 10th will be excluded.
 *This API is auth-protected.*
 
 GET `/api/user/class/[id]`
+
 Set class metadata given a class id for this user. TODO: change to POST
 
 Param:
@@ -60,7 +65,7 @@ Unfortunately, there are some features I didn't get to implement due to time res
 Here is the list:
 - Search does not currently work for middle-of-the-word query. 
 - Search filter based on Level
-- Track percentage of class user actually watched.
+- Track percentage of class video that user has actually watched.
 - Display progress UI for all videos in `/classes` when user is logged in.
 - Lazy-load all images. Use WebP and srcset to optimize for smaller screen.
 - Unit testing.
