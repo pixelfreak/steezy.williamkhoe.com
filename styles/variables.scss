@@ -16,8 +16,8 @@ $themes:
     (
         bg: #FFF,
         headerBg: #FFF,
-        themeToggleFill: #555,
-        themeToggleFillHover: #000,
+        themeToggleFill: #000,
+        themeToggleFillHover: #333,
         headerLogoFill: #212121,
         menuTextColor: #000,
         headerBorder: #EBEFEF,
@@ -28,6 +28,8 @@ $themes:
         buttonSelected: #EBEBEB,
         buttonHover: #F6F6F6,
         text: #000,
+        darkDisplayToggle: block,
+        lightDisplayToggle: none,
     ),
     dark: 
     (
@@ -45,6 +47,8 @@ $themes:
         buttonSelected: #555,
         buttonHover: #444,
         text: #FFF,
+        darkDisplayToggle: none,
+        lightDisplayToggle: block,
     )
 );
 

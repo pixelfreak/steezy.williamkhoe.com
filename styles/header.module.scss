@@ -96,6 +96,20 @@ header.main
                     fill: themed('themeToggleFill');
                 }
             }
+            svg.dark
+            {
+                @include themify() 
+                {
+                    display: themed('darkDisplayToggle');
+                }
+            }
+            svg.light
+            {
+                @include themify() 
+                {
+                    display: themed('lightDisplayToggle');
+                }
+            }
 
             &:hover svg
             {
