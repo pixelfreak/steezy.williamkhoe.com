@@ -16,7 +16,12 @@ section#classes
     {
         position: relative;
         width:40%; height:42px;
-        border:1px solid map.get($theme-colors, 'secondary'); border-radius:8px;
+        border:1px solid; border-radius:8px;
+
+        @include themify()
+        {
+            color: themed('inputBorder');
+        }
 
         form
         {
@@ -33,6 +38,11 @@ section#classes
             &::-webkit-search-cancel-button
             {
                 display: none;
+            }
+
+            @include themify()
+            {
+                color: themed('input');
             }
         }
         button[type='submit']
@@ -58,7 +68,10 @@ section#classes
         
         ::placeholder
         {
-            color: #AAA;
+            @include themify()
+            {
+                color: themed('inputPlaceholder');
+            }
         }
     }
 
@@ -149,6 +162,28 @@ section#classes
     {
         display: flex;
         justify-content: center;
-        margin:0 0 40px 0;
+        padding:0 0 40px 0;
+
+        :global(.MuiPaginationItem-root)
+        {
+            @include themify()
+            {
+                color: themed('menuTextColor');
+            }
+        }
+        :global(.MuiPaginationItem-page.Mui-selected)
+        {
+            @include themify()
+            {
+                background-color: themed('buttonSelected');
+            }
+        }
+        :global(.MuiPaginationItem-page:hover)
+        {
+            @include themify()
+            {
+                background-color: themed('buttonHover');
+            }
+        }
     }
 }
