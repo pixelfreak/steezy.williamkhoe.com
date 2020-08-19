@@ -8,6 +8,20 @@ export default function Layout({ children })
 {
     const [theme, setTheme] = useState('light');
 
+    useEffect(() =>
+    {
+        const initialTheme = localStorage.getItem('theme');
+        if (initialTheme)
+        {
+            setTheme(initialTheme);
+        }
+    }, []);
+
+    useEffect(() =>
+    {
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
     return (
         <ThemeContext.Provider value={{theme, setTheme}}>
             <div className={`theme-${theme}`}>
