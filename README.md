@@ -11,7 +11,7 @@ To run it in development:
 
 # Architecture
 - [Next.js](https://nextjs.org/) is chosen for speed of development and its out-of-the-box features such as code-splitting, static/SSR/Serverless Functions, CSS-in-JS, and dynamic routing capabilites.
-- [Firestore](https://firebase.google.com/docs/firestore) is chosen as the database. Ideally, use SQL for highly relational data like User and NoSQL for others.
+- [Firestore](https://firebase.google.com/docs/firestore) is chosen as the database. Ideally, use SQL for highly relational data like User and NoSQL for others. And pair both with GraphQL.
 - [Algolia](https://www.algolia.com/) handles the search indexing.
 - [Auth0](https://auth0.com/) handles the user authorization. Basic user information is also stored here.
 - [Cloudinary](https://cloudinary.com/) handles all of the image assets.
